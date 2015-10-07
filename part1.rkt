@@ -17,7 +17,7 @@
   (div (lhs CFAE?)(rhs CFAE?))
   (fun (arg symbol?)(body CFAE?))
   (app (fun CFAE?) (arg CFAE?))
-  ;;(if0 (cond CFAE?) (true CFAE?) (false CFAE?))
+  (if0 (det CFAE?) (true CFAE?) (false CFAE?))
   )
 
 ;;datatype that will associate the symbol to a value
@@ -68,6 +68,11 @@
 
 
       )
+      ;;add the condition for if0 here.
+      ;;put a cond and interp the condition
+      ;;if once the condition is interp, it returns a numV with n = 0
+      ;;interp the first one 
+      ;;otherwise interp the second one
     )
   )
   
