@@ -3,6 +3,10 @@
 ;;Name: Giordanno Castro Garcia
 ;;KUID: 2738180
 ;;Project2 Part1
+
+
+
+
 ;;datatype according to what was specified on the webpage
 (define-type CFAE
   (num (n number?))
@@ -66,6 +70,9 @@
       )
     )
   )
+  
+;;Helper methods for arithmetic operations
+;;They do type checking on the operands
 
 (define num+
   (lambda (l r)
