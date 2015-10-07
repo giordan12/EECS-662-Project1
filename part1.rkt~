@@ -65,10 +65,8 @@
                                              (interp-cfae a ds))
                                        (closV-env f-value)))
                    ))
-      (if0 (d t f) (cond
-                     ((and (numV? (interp-cfae d ds)) (equal? (interp-cfae d ds) (numV 0))) (interp-cfae t ds))
-                     (else (interp-cfae f ds))
-                     ))
+
+
       )
       ;;add the condition for if0 here.
       ;;put a cond and interp the condition
