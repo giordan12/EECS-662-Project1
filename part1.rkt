@@ -1,5 +1,9 @@
 #lang plai
 
+;;Name: Giordanno Castro Garcia
+;;KUID: 2738180
+;;Project2 Part1
+;;datatype according to what was specified on the webpage
 (define-type CFAE
   (num (n number?))
   (id (name symbol?))
@@ -12,15 +16,19 @@
   ;;(if0 (cond CFAE?) (true CFAE?) (false CFAE?))
   )
 
+;;datatype that will associate the symbol to a value
 (define-type Binding
   (bind (name symbol?) (val Value?)))
 
 ;;(define-type-alias Env (listof Binding))
 
+;;datatype used to specify the possible return types after interpretation
 (define-type Value
   (numV (n number?))
   (closV (arg symbol?) (body CFAE?) (env (listof Binding?))));;plai does not have define-type-alias, therefore use an alternative to this method
 
+
+;;lookup method that will find the associated value for a symbol
 (define lookup
   (lambda (for env)
     (cond
@@ -28,14 +36,15 @@
       (else (cond
               ((symbol=? for (bind-name (first env))) (bind-val (first env)))
               (else (lookup for (rest env)))
-              ))
-      
+              ))      
       )
     ))
 
 (define extend-env cons)
 (define mt-env empty)
 
+;;actual interpreter
+;;every arithmetic operation uses a helper method in order to do type verification
 (define interp-cfae
   (lambda (expr ds)
     (type-case CFAE expr
