@@ -1,0 +1,91 @@
+#lang plai
+
+(define-type CFAE
+  (num (n number?))
+  (id (name symbol?))
+  (add (lhs CFAE?)(rhs CFAE?))
+  (sub (lhs CFAE?)(rhs CFAE?))
+  (mult (lhs CFAE?)(rhs CFAE?))
+  (div (lhs CFAE?)(rhs CFAE?))
+  (fun (arg symbol?)(body CFAE?))
+  (app (fun CFAE?) (arg CFAE?))
+  ;;(if0 (cond CFAE?) (true CFAE?) (false CFAE?))
+  )
+
+(define-type Binding
+  (bind (name symbol?) (val Value?)))
+
+;;(define-type-alias Env (listof Binding))
+
+(define-type Value
+  (numV (n number?))
+  (closV (arg symbol?) (body CFAE?) (env (listof Binding?))));;plai does not have define-type-alias, therefore use an alternative to this method
+
+(define lookup
+  (lambda (for env)
+    (cond
+      ((empty? env) (error 'lookup "name not found"))
+      (else (cond
+              ((symbol=? for (bind-name (first env))) (bind-val (first env)))
+              (else (lookup for (rest env)))
+              ))
+      
+      )
+    ))
+
+(define extend-env cons)
+(define mt-env empty)
+
+(define interp-cfae
+  (lambda (expr ds)
+    (type-case CFAE expr
+      (num (n) (numV n))
+      (id (n) (lookup n ds))
+      (add (l r) (num+ (interp-cfae l ds) (interp-cfae r ds)))
+      (sub (l r) (sub+ (interp-cfae l ds) (interp-cfae r ds)))
+      (mult (l r) (mult+ (interp-cfae l ds) (interp-cfae r ds)))
+      (div (l r) (div+ (interp-cfae l ds) (interp-cfae r ds)))
+      (fun (a b) (closV a b ds))
+      (app (f a) (local ([define f-value (interp-cfae f ds)])
+                   (interp-cfae (closV-body f-value)
+                           (extend-env (bind (closV-arg f-value)
+                                             (interp-cfae a ds))
+                                       (closV-env f-value)))
+                   ))
+
+
+      )
+    )
+  )
+
+(define num+
+  (lambda (l r)
+    (cond
+      ((and (numV? l) (numV? r)) (numV (+ (numV-n l) (numV-n r))))
+      (else
+       (error 'num+ "one argument was not a number"))
+      )))
+
+(define sub+
+  (lambda (l r)
+    (cond
+      ((and (numV? l) (numV? r)) (numV (- (numV-n l) (numV-n r))))
+      (else
+       (error 'sub+ "one argument was not a number"))
+      )))
+
+(define mult+
+  (lambda (l r)
+    (cond
+      ((and (numV? l) (numV? r)) (numV (* (numV-n l) (numV-n r))))
+      (else 'mult+ "one argument was not a number")
+      )
+    ))
+
+(define div+
+  (lambda (l r)
+    (cond
+      ((and (numV? l) (numV? r)) (numV (/ (numV-n l) (numV-n r))))
+      (else 'div+ "one argument was not a number")
+      )
+    ))
