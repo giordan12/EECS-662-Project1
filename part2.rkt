@@ -12,3 +12,14 @@
   (with (name symbol?) (named_expr CFWAE?) (body CFWAE?))
   ;;(cond0 ())
   )
+
+(define-type CFAE
+	(cnum (n number?))
+	(cid (name symbol?))
+	(cadd (lhs CFAE?) (rhs CFAE?))
+	(csub (lhs CFAE?) (rhs CFAE?))
+	(cmult (lhs CFAE?) (rhs CFAE?))
+	(cdiv (lhs CFAE?) (rhs CFAE?))
+	(capp (fun CFAE?) (arg CFAE?))
+	(cif0 (det CFAE?) (true CFAE?) (false CFAE?))
+)
