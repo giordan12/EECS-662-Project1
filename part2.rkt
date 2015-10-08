@@ -1,5 +1,11 @@
 #lang plai
 
+;;Name: Giordanno Castro Garcia
+;;KU ID: 2738180
+;;Project 2 - Part 2
+
+;;CFWAE defined according to specification on webpage
+;;constructors have a c as the first character
 (define-type CFWAE
   (cnum (n number?))
   (cid (name symbol?))
@@ -14,6 +20,7 @@
   (cond0 (conditions (listof Condition?)) (def CFWAE?))
   )
 
+;;CFAE defined according to specification on webpage
 (define-type CFAE
 	(num (n number?))
 	(id (name symbol?))
@@ -26,6 +33,7 @@
 	(fun (arg symbol?) (body CFAE?))
 )
 
+;;method that transforms a CFAWE type into CFAE
 (define elab-cfwae 
 	(lambda (expr)
 		(type-case CFWAE expr
@@ -39,28 +47,29 @@
 			(capp (f a) (app (elab-cfwae f) (elab-cfwae a)))
 			(cif0 (d t f) (if0 (elab-cfwae d) (elab-cfwae t) (elab-cfwae f)))
 			(with (n ne b) (app (fun n (elab-cfwae b)) (elab-cfwae ne)))
-                  (cond0 (c def) (cond
-                                   ((empty? (rest c)) (if0 (elab-cfwae (try-condi (first c))) (elab-cfwae (try-do (first c))) (elab-cfwae def)))
+                  (cond0 (c def) (cond ;;verifies if the list of attempts is empty during recursion
+                                   ((empty? (rest c)) (if0 (elab-cfwae (try-condi (first c))) (elab-cfwae (try-do (first c))) (elab-cfwae def))) ;;if not empty then keep recursing
                                    (else (if0 (elab-cfwae (try-condi(first c))) (elab-cfwae (try-do(first c))) (elab-cfwae (cond0(rest c) def)))))
                                    )
 		)
 	)
 )
 
+;;binding structure for closures
 (define-type Binding
   (bind (name symbol?) (val Value?)))
 
+;;structure for return types from interpreter
 (define-type Value
   (numV (n number?))
   (closV (arg symbol?) (body CFAE?) (env (listof Binding?)))
   )
 
+;;data type used in cond0
 (define-type Condition
   (try (condi CFWAE?) (do CFWAE?)))
 
-(define-type ListCondition
-  (lis (l (listof Condition?))))
-
+;;lookup method to find symbol definitions
 (define lookup
   (lambda (for env)
     (cond
@@ -76,6 +85,7 @@
 (define extend-env cons)
 (define mt-env empty)
 
+;;method for interpreter
 (define interp-cfae
 	(lambda (expr ds)
 		(type-case CFAE expr
@@ -100,6 +110,8 @@
 	)
 )
 
+
+;;-------    Helper Methods for type checking in arithmetic operations ---------
 (define num+
   (lambda (l r)
     (cond
@@ -132,6 +144,7 @@
       )
     ))
 
+;;evaluation method that combines the elab and interp method
 (define eval-cfwae
   (lambda (expr)
     (interp-cfae (elab-cfwae expr) mt-env)
