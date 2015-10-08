@@ -1,7 +1,7 @@
 #lang plai
 
 (define-type CFWAE
-  (cnum (n number?))
+  (num (n number?))
   (cid (name symbol?))
   (cadd (lhs CFWAE?) (rhs CFWAE?))
   (csub (lhs CFWAE?) (rhs CFWAE?))
