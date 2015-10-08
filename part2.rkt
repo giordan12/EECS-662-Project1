@@ -42,3 +42,38 @@
 		)
 	)
 )
+
+(define interp-cfae
+	(lambda (expr ds)
+		(type-case CFAE expr
+			(num (n) (numV n))
+			(id (n) (lookup n ds))
+			(add (l r) (num+ (interp-cfae l ds) (interp-cfae r ds)))
+			(sub (l r) (sub+ (interp-cfae l ds) (interp-cfae r ds)))
+			(mult (l r) (mult+ (interp-cfae l ds) (interp-cfae r ds)))
+			(div (l r) (div+ (interp-cfae l ds) (interp-cfae r ds)))
+			(fun (a b) (closV a b ds))
+			(app (f a) (local ([defin f-value (interp-cfae f ds)])
+							(interp-cfae (closV-body fvalue)
+								(extend-env (bind (closV-arg f-value)
+												(interp-cfae a ds))
+											(closV-env f-value)
+												)
+							)
+			))
+			(if0 (d t f) (cond
+							((and (numV? (interp-cfae d ds)) (equal? (interp-cfae d ds) (numV 0))) (interp-cfae t ds))
+							(else (interp-cfae f ds))	
+			))
+		)
+	)
+)
+
+
+
+
+
+
+
+
+
