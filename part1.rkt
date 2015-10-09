@@ -63,7 +63,7 @@
                    (interp-cfae (closV-body f-value)
                            (extend-env (bind (closV-arg f-value)
                                              (interp-cfae a ds))
-                                       (closV-env f-value)))
+                                       ds));;instead of ds mt-env for static scoping
                    ))
       (if0 (d t f) (cond
                      ((and (numV? (interp-cfae d ds)) (equal? (interp-cfae d ds) (numV 0))) (interp-cfae t ds))
