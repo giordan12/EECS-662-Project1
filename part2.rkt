@@ -1,11 +1,18 @@
 #lang plai
+;;Name: Giordanno Castro Garcia
+;;KU ID: 2738180
+;;Project1 Part 2
 
+<<<<<<< Updated upstream
 ;;Name: Giordanno Castro Garcia
 ;;KU ID: 2738180
 ;;Project 2 - Part 2
 
 ;;CFWAE defined according to specification on webpage
 ;;constructors have a c as the first character
+=======
+;;CFWAE type defined according to webpage specification
+>>>>>>> Stashed changes
 (define-type CFWAE
   (cnum (n number?))
   (cid (name symbol?))
@@ -20,7 +27,11 @@
   (cond0 (conditions (listof Condition?)) (def CFWAE?))
   )
 
+<<<<<<< Updated upstream
 ;;CFAE defined according to specification on webpage
+=======
+;;CFWE type defined according to webpage specification
+>>>>>>> Stashed changes
 (define-type CFAE
 	(num (n number?))
 	(id (name symbol?))
@@ -33,7 +44,11 @@
 	(fun (arg symbol?) (body CFAE?))
 )
 
+<<<<<<< Updated upstream
 ;;method that transforms a CFAWE type into CFAE
+=======
+;;elaborator method
+>>>>>>> Stashed changes
 (define elab-cfwae 
 	(lambda (expr)
 		(type-case CFWAE expr
@@ -55,21 +70,37 @@
 	)
 )
 
+<<<<<<< Updated upstream
 ;;binding structure for closures
 (define-type Binding
   (bind (name symbol?) (val Value?)))
 
 ;;structure for return types from interpreter
+=======
+;;type used to bind a symbol to a value
+(define-type Binding
+  (bind (name symbol?) (val Value?)))
+
+;;type used as a return from the interpreter
+>>>>>>> Stashed changes
 (define-type Value
   (numV (n number?))
   (closV (arg symbol?) (body CFAE?) (env (listof Binding?)))
   )
 
+<<<<<<< Updated upstream
 ;;data type used in cond0
 (define-type Condition
   (try (condi CFWAE?) (do CFWAE?)))
 
 ;;lookup method to find symbol definitions
+=======
+;;type defined to identify the conditions on cond statement
+(define-type Condition
+  (try (condi CFWAE?) (do CFWAE?)))
+
+;;method that encounters the associated value for a symbol
+>>>>>>> Stashed changes
 (define lookup
   (lambda (for env)
     (cond
@@ -83,9 +114,15 @@
   )
 
 (define extend-env cons)
-(define mt-env empty)
+;;mt-env already includes the functions (area and inc) and the value for pi
+(define mt-env (cons (bind 'area (closV 'x (mult (id 'pi) (mult (id 'x) (id 'x))) empty))(cons (bind 'inc (closV 'x (add (num 1) (id 'x)) empty))(cons(bind 'pi (numV 3.141592)) empty))))
 
+
+<<<<<<< Updated upstream
 ;;method for interpreter
+=======
+;;interpreter
+>>>>>>> Stashed changes
 (define interp-cfae
 	(lambda (expr ds)
 		(type-case CFAE expr
@@ -100,7 +137,7 @@
 							(interp-cfae (closV-body f-value)
 								(extend-env (bind (closV-arg f-value)
                                                                                   (interp-cfae a ds))
-											(closV-env f-value)))
+											ds));;instead of ds mt-env for static scoping
 			))
 			(if0 (d t f) (cond
 							((and (numV? (interp-cfae d ds)) (equal? (interp-cfae d ds) (numV 0))) (interp-cfae t ds))
@@ -110,8 +147,12 @@
 	)
 )
 
+<<<<<<< Updated upstream
 
 ;;-------    Helper Methods for type checking in arithmetic operations ---------
+=======
+;;helper methods for type checking
+>>>>>>> Stashed changes
 (define num+
   (lambda (l r)
     (cond
@@ -144,15 +185,14 @@
       )
     ))
 
+<<<<<<< Updated upstream
 ;;evaluation method that combines the elab and interp method
+=======
+;;evaluator that combines the elaborator and the interpreter
+>>>>>>> Stashed changes
 (define eval-cfwae
   (lambda (expr)
     (interp-cfae (elab-cfwae expr) mt-env)
     )
   )
-
-
-
-
-
 
